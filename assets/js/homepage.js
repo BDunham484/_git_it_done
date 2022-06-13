@@ -2,6 +2,7 @@ var userFormEl = document.querySelector("#user-form");
 var nameInputEl = document.querySelector("#username");
 var repoContainerEl = document.querySelector("#repos-container");
 var repoSearchTerm = document.querySelector("#repo-search-term");
+var languageButtonsEl = document.querySelector("#language-buttons");
 
 
 
@@ -13,6 +14,7 @@ var formSubmitHandler = function(event) {
     var username = nameInputEl.value.trim();
     if (username) {
         getUserRepos(username);
+        repoContainerEl.textContent = "";
         nameInputEl.value = "";
     } else {
         alert("Please enter a Github username")
@@ -88,8 +90,41 @@ var displayRepos = function(repos, searchTerm) {
 
 
 
+
+//gets featured repos
+var getFeaturedRepos = function(language) {
+    var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
+
+    fetch(apiUrl).then(function(response) {
+        if (response.ok) {
+            response.json().then(function(data) {
+                displayRepos(data.items, language);
+            })
+        } else {
+            alert("Error: Github User Not Found");
+        }
+    });
+};
+
+
+
+
+//function that delegates what happens when language buttons are clicked
+var buttonClickHandler = function(event) {
+    event.preventDefault();
+    var language = event.target.getAttribute("data-language");
+    if (language) {
+        getFeaturedRepos(language);
+        //clear old content
+        repoContainerEl.textContent = "";
+    }
+}
+
+
 //add event listener to the form element and call the formSubmitHandler function
 userFormEl.addEventListener("submit", formSubmitHandler);
+//event listener on the language buttons
+languageButtonsEl.addEventListener("click", buttonClickHandler);
 
 
 

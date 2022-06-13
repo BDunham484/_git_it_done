@@ -15,8 +15,8 @@ var getRepoName = function() {
         repoNameEl.textContent = repoName;  
         getRepoIssues(repoName);
     } else {
-        //if no repo was given redirect to homepage
-        document.location.replace("./index.html");
+        //if no repo was given, redirect to homepage
+        // document.location.replace("./index.html");
     } 
 };
 
@@ -25,9 +25,11 @@ var getRepoName = function() {
 
 
 
-var getRepoIssues = function(repo) {
-    var apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc";
 
+var getRepoIssues = function(repo) {
+    //format the github api url
+    var apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc";
+    //make a get request to url
     fetch(apiUrl).then(function(response) {
         //request was succesful
         if (response.ok) {
